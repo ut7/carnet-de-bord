@@ -4,22 +4,20 @@ import { emailLoginRequest } from '$lib/utils/emailLoginRequest';
 import type { RequestHandler } from '@sveltejs/kit';
 import { v4 as uuidv4 } from 'uuid';
 import { getAppUrl } from '$lib/config/variables/private';
+import { getJwtUser } from '$lib/utils/getJwt';
 
-export const post: RequestHandler = async (request) => {
-	const { username } = request.body as unknown as {
-		username: string;
-	};
+type Acc = {
+	id: string;
+	type: 'professional' | 'beneficiary' | 'admin';
+	beneficiary_id: string;
+	professional_id: string;
+	admin_id: string;
+	confirmed: boolean;
+	username: string;
+};
 
-	type Acc = {
-		id: string;
-		type: 'professional' | 'beneficiary' | 'admin';
-		beneficiary_id: string;
-		professional_id: string;
-		admin_id: string;
-		confirmed: boolean;
-	};
-
-	let account = (await knex('account').where({ username }).first()) as Acc;
+const getAccountByUsernameOrEmail = async (needle: string): Promise<Acc | null> => {
+	let account = (await knex('account').where({ username: needle }).first()) as Acc;
 
 	if (!account) {
 		account = (await knex('account')
@@ -30,20 +28,58 @@ export const post: RequestHandler = async (request) => {
 				'account.professional_id as professional_id',
 				'account.admin_id as admin_id',
 				'account.confirmed as confirmed',
+				'account.username as username',
 			])
 			.leftJoin('professional', 'professional.id', 'account.professional_id')
 			.leftJoin('admin', 'admin.id', 'account.admin_id')
-			.where('admin.email', username)
-			.orWhere('professional.email', username)
+			.where('admin.email', needle)
+			.orWhere('professional.email', needle)
 			.first()) as Acc;
-		if (!account) {
-			return {
-				status: 401,
-				body: {
-					errors: 'USER_NOT_FOUND',
-				},
-			};
-		}
+	}
+
+	return account;
+};
+
+const impersonateAs = async (target: string) => {
+	const account = await getAccountByUsernameOrEmail(target);
+	const { id, type, username, professional_id, beneficiary_id } = account;
+	const user = getJwtUser({
+		id,
+		type,
+		username,
+		professionalId: professional_id,
+		beneficiaryId: beneficiary_id,
+	});
+	return {
+		status: 302,
+		headers: {
+			'set-cookie': `jwt=${user.token}; Path=/; HttpOnly; SameSite=Strict`,
+			location: '/pro/accueil',
+		},
+	};
+};
+
+export const post: RequestHandler = async (request) => {
+	const { username, impersonate } = request.body as unknown as {
+		username: string;
+		impersonate: string;
+	};
+
+	if (impersonate) {
+		const resp = await impersonateAs(impersonate);
+		console.log('impersonating', { resp });
+		return resp;
+	}
+
+	const account = await getAccountByUsernameOrEmail(username);
+
+	if (!account) {
+		return {
+			status: 401,
+			body: {
+				errors: 'USER_NOT_FOUND',
+			},
+		};
 	}
 
 	if (!account.confirmed) {
