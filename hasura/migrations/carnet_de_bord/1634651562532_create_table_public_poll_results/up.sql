@@ -1,0 +1,1 @@
+CREATE TABLE "public"."poll_results" ("id" uuid NOT NULL, "answers" jsonb NOT NULL, "professional_id" uuid NOT NULL, "created_at" timestamptz NOT NULL, "campaign" text NOT NULL, PRIMARY KEY ("id") , FOREIGN KEY ("professional_id") REFERENCES "public"."professional"("id") ON UPDATE restrict ON DELETE restrict, UNIQUE ("id"));

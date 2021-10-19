@@ -1,0 +1,22 @@
+table:
+  name: poll_results
+  schema: public
+configuration:
+  custom_column_names:
+    created_at: createdAt
+    professional_id: professionalId
+  custom_root_fields: {}
+object_relationships:
+- name: professional
+  using:
+    foreign_key_constraint_on: professional_id
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - answers
+    - campaign
+    set:
+      professional_id: x-hasura-Professional-Id
+  role: professional

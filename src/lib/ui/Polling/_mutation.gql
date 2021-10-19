@@ -1,0 +1,5 @@
+mutation CreatePollResult($answers: jsonb = "", $campaign: String = "") {
+	insert_poll_results_one(object: { answers: $answers, campaign: $campaign }) {
+		id
+	}
+}

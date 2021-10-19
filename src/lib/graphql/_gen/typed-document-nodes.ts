@@ -831,6 +831,10 @@ export type MutationRoot = {
 	delete_notebook_target?: Maybe<NotebookTargetMutationResponse>;
 	/** delete single row from the table: "notebook_target" */
 	delete_notebook_target_by_pk?: Maybe<NotebookTarget>;
+	/** delete data from the table: "poll_results" */
+	delete_poll_results?: Maybe<PollResultsMutationResponse>;
+	/** delete single row from the table: "poll_results" */
+	delete_poll_results_by_pk?: Maybe<PollResults>;
 	/** delete data from the table: "professional" */
 	delete_professional?: Maybe<ProfessionalMutationResponse>;
 	/** delete single row from the table: "professional" */
@@ -887,6 +891,10 @@ export type MutationRoot = {
 	insert_notebook_target?: Maybe<NotebookTargetMutationResponse>;
 	/** insert a single row into the table: "notebook_target" */
 	insert_notebook_target_one?: Maybe<NotebookTarget>;
+	/** insert data into the table: "poll_results" */
+	insert_poll_results?: Maybe<PollResultsMutationResponse>;
+	/** insert a single row into the table: "poll_results" */
+	insert_poll_results_one?: Maybe<PollResults>;
 	/** insert data into the table: "professional" */
 	insert_professional?: Maybe<ProfessionalMutationResponse>;
 	/** insert a single row into the table: "professional" */
@@ -943,6 +951,10 @@ export type MutationRoot = {
 	update_notebook_target?: Maybe<NotebookTargetMutationResponse>;
 	/** update single row of the table: "notebook_target" */
 	update_notebook_target_by_pk?: Maybe<NotebookTarget>;
+	/** update data of the table: "poll_results" */
+	update_poll_results?: Maybe<PollResultsMutationResponse>;
+	/** update single row of the table: "poll_results" */
+	update_poll_results_by_pk?: Maybe<PollResults>;
 	/** update data of the table: "professional" */
 	update_professional?: Maybe<ProfessionalMutationResponse>;
 	/** update single row of the table: "professional" */
@@ -1052,6 +1064,16 @@ export type MutationRootDeleteNotebookTargetArgs = {
 
 /** mutation root */
 export type MutationRootDeleteNotebookTargetByPkArgs = {
+	id: Scalars['uuid'];
+};
+
+/** mutation root */
+export type MutationRootDeletePollResultsArgs = {
+	where: PollResultsBoolExp;
+};
+
+/** mutation root */
+export type MutationRootDeletePollResultsByPkArgs = {
 	id: Scalars['uuid'];
 };
 
@@ -1211,6 +1233,18 @@ export type MutationRootInsertNotebookTargetArgs = {
 export type MutationRootInsertNotebookTargetOneArgs = {
 	object: NotebookTargetInsertInput;
 	on_conflict?: Maybe<NotebookTargetOnConflict>;
+};
+
+/** mutation root */
+export type MutationRootInsertPollResultsArgs = {
+	objects: Array<PollResultsInsertInput>;
+	on_conflict?: Maybe<PollResultsOnConflict>;
+};
+
+/** mutation root */
+export type MutationRootInsertPollResultsOneArgs = {
+	object: PollResultsInsertInput;
+	on_conflict?: Maybe<PollResultsOnConflict>;
 };
 
 /** mutation root */
@@ -1389,6 +1423,28 @@ export type MutationRootUpdateNotebookTargetArgs = {
 export type MutationRootUpdateNotebookTargetByPkArgs = {
 	_set?: Maybe<NotebookTargetSetInput>;
 	pk_columns: NotebookTargetPkColumnsInput;
+};
+
+/** mutation root */
+export type MutationRootUpdatePollResultsArgs = {
+	_append?: Maybe<PollResultsAppendInput>;
+	_delete_at_path?: Maybe<PollResultsDeleteAtPathInput>;
+	_delete_elem?: Maybe<PollResultsDeleteElemInput>;
+	_delete_key?: Maybe<PollResultsDeleteKeyInput>;
+	_prepend?: Maybe<PollResultsPrependInput>;
+	_set?: Maybe<PollResultsSetInput>;
+	where: PollResultsBoolExp;
+};
+
+/** mutation root */
+export type MutationRootUpdatePollResultsByPkArgs = {
+	_append?: Maybe<PollResultsAppendInput>;
+	_delete_at_path?: Maybe<PollResultsDeleteAtPathInput>;
+	_delete_elem?: Maybe<PollResultsDeleteElemInput>;
+	_delete_key?: Maybe<PollResultsDeleteKeyInput>;
+	_prepend?: Maybe<PollResultsPrependInput>;
+	_set?: Maybe<PollResultsSetInput>;
+	pk_columns: PollResultsPkColumnsInput;
 };
 
 /** mutation root */
@@ -2952,6 +3008,184 @@ export enum OrderBy {
 	DescNullsLast = 'desc_nulls_last',
 }
 
+/** columns and relationships of "poll_results" */
+export type PollResults = {
+	__typename?: 'poll_results';
+	answers: Scalars['jsonb'];
+	campaign: Scalars['String'];
+	createdAt: Scalars['timestamptz'];
+	id: Scalars['uuid'];
+	/** An object relationship */
+	professional: Professional;
+	professionalId: Scalars['uuid'];
+};
+
+/** columns and relationships of "poll_results" */
+export type PollResultsAnswersArgs = {
+	path?: Maybe<Scalars['String']>;
+};
+
+/** aggregated selection of "poll_results" */
+export type PollResultsAggregate = {
+	__typename?: 'poll_results_aggregate';
+	aggregate?: Maybe<PollResultsAggregateFields>;
+	nodes: Array<PollResults>;
+};
+
+/** aggregate fields of "poll_results" */
+export type PollResultsAggregateFields = {
+	__typename?: 'poll_results_aggregate_fields';
+	count: Scalars['Int'];
+	max?: Maybe<PollResultsMaxFields>;
+	min?: Maybe<PollResultsMinFields>;
+};
+
+/** aggregate fields of "poll_results" */
+export type PollResultsAggregateFieldsCountArgs = {
+	columns?: Maybe<Array<PollResultsSelectColumn>>;
+	distinct?: Maybe<Scalars['Boolean']>;
+};
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type PollResultsAppendInput = {
+	answers?: Maybe<Scalars['jsonb']>;
+};
+
+/** Boolean expression to filter rows from the table "poll_results". All fields are combined with a logical 'AND'. */
+export type PollResultsBoolExp = {
+	_and?: Maybe<Array<PollResultsBoolExp>>;
+	_not?: Maybe<PollResultsBoolExp>;
+	_or?: Maybe<Array<PollResultsBoolExp>>;
+	answers?: Maybe<JsonbComparisonExp>;
+	campaign?: Maybe<StringComparisonExp>;
+	createdAt?: Maybe<TimestamptzComparisonExp>;
+	id?: Maybe<UuidComparisonExp>;
+	professional?: Maybe<ProfessionalBoolExp>;
+	professionalId?: Maybe<UuidComparisonExp>;
+};
+
+/** unique or primary key constraints on table "poll_results" */
+export enum PollResultsConstraint {
+	/** unique or primary key constraint */
+	PollResultsPkey = 'poll_results_pkey',
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type PollResultsDeleteAtPathInput = {
+	answers?: Maybe<Array<Scalars['String']>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type PollResultsDeleteElemInput = {
+	answers?: Maybe<Scalars['Int']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type PollResultsDeleteKeyInput = {
+	answers?: Maybe<Scalars['String']>;
+};
+
+/** input type for inserting data into table "poll_results" */
+export type PollResultsInsertInput = {
+	answers?: Maybe<Scalars['jsonb']>;
+	campaign?: Maybe<Scalars['String']>;
+	createdAt?: Maybe<Scalars['timestamptz']>;
+	id?: Maybe<Scalars['uuid']>;
+	professional?: Maybe<ProfessionalObjRelInsertInput>;
+	professionalId?: Maybe<Scalars['uuid']>;
+};
+
+/** aggregate max on columns */
+export type PollResultsMaxFields = {
+	__typename?: 'poll_results_max_fields';
+	campaign?: Maybe<Scalars['String']>;
+	createdAt?: Maybe<Scalars['timestamptz']>;
+	id?: Maybe<Scalars['uuid']>;
+	professionalId?: Maybe<Scalars['uuid']>;
+};
+
+/** aggregate min on columns */
+export type PollResultsMinFields = {
+	__typename?: 'poll_results_min_fields';
+	campaign?: Maybe<Scalars['String']>;
+	createdAt?: Maybe<Scalars['timestamptz']>;
+	id?: Maybe<Scalars['uuid']>;
+	professionalId?: Maybe<Scalars['uuid']>;
+};
+
+/** response of any mutation on the table "poll_results" */
+export type PollResultsMutationResponse = {
+	__typename?: 'poll_results_mutation_response';
+	/** number of rows affected by the mutation */
+	affected_rows: Scalars['Int'];
+	/** data from the rows affected by the mutation */
+	returning: Array<PollResults>;
+};
+
+/** on conflict condition type for table "poll_results" */
+export type PollResultsOnConflict = {
+	constraint: PollResultsConstraint;
+	update_columns?: Array<PollResultsUpdateColumn>;
+	where?: Maybe<PollResultsBoolExp>;
+};
+
+/** Ordering options when selecting data from "poll_results". */
+export type PollResultsOrderBy = {
+	answers?: Maybe<OrderBy>;
+	campaign?: Maybe<OrderBy>;
+	createdAt?: Maybe<OrderBy>;
+	id?: Maybe<OrderBy>;
+	professional?: Maybe<ProfessionalOrderBy>;
+	professionalId?: Maybe<OrderBy>;
+};
+
+/** primary key columns input for table: poll_results */
+export type PollResultsPkColumnsInput = {
+	id: Scalars['uuid'];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type PollResultsPrependInput = {
+	answers?: Maybe<Scalars['jsonb']>;
+};
+
+/** select columns of table "poll_results" */
+export enum PollResultsSelectColumn {
+	/** column name */
+	Answers = 'answers',
+	/** column name */
+	Campaign = 'campaign',
+	/** column name */
+	CreatedAt = 'createdAt',
+	/** column name */
+	Id = 'id',
+	/** column name */
+	ProfessionalId = 'professionalId',
+}
+
+/** input type for updating data in table "poll_results" */
+export type PollResultsSetInput = {
+	answers?: Maybe<Scalars['jsonb']>;
+	campaign?: Maybe<Scalars['String']>;
+	createdAt?: Maybe<Scalars['timestamptz']>;
+	id?: Maybe<Scalars['uuid']>;
+	professionalId?: Maybe<Scalars['uuid']>;
+};
+
+/** update columns of table "poll_results" */
+export enum PollResultsUpdateColumn {
+	/** column name */
+	Answers = 'answers',
+	/** column name */
+	Campaign = 'campaign',
+	/** column name */
+	CreatedAt = 'createdAt',
+	/** column name */
+	Id = 'id',
+	/** column name */
+	ProfessionalId = 'professionalId',
+}
+
 /** columns and relationships of "professional" */
 export type Professional = {
 	__typename?: 'professional';
@@ -3275,6 +3509,12 @@ export type QueryRoot = {
 	notebook_target_aggregate: NotebookTargetAggregate;
 	/** fetch data from the table: "notebook_target" using primary key columns */
 	notebook_target_by_pk?: Maybe<NotebookTarget>;
+	/** fetch data from the table: "poll_results" */
+	poll_results: Array<PollResults>;
+	/** fetch aggregated fields from the table: "poll_results" */
+	poll_results_aggregate: PollResultsAggregate;
+	/** fetch data from the table: "poll_results" using primary key columns */
+	poll_results_by_pk?: Maybe<PollResults>;
 	/** fetch data from the table: "professional" */
 	professional: Array<Professional>;
 	/** fetch aggregated fields from the table: "professional" */
@@ -3484,6 +3724,26 @@ export type QueryRootNotebookTargetAggregateArgs = {
 };
 
 export type QueryRootNotebookTargetByPkArgs = {
+	id: Scalars['uuid'];
+};
+
+export type QueryRootPollResultsArgs = {
+	distinct_on?: Maybe<Array<PollResultsSelectColumn>>;
+	limit?: Maybe<Scalars['Int']>;
+	offset?: Maybe<Scalars['Int']>;
+	order_by?: Maybe<Array<PollResultsOrderBy>>;
+	where?: Maybe<PollResultsBoolExp>;
+};
+
+export type QueryRootPollResultsAggregateArgs = {
+	distinct_on?: Maybe<Array<PollResultsSelectColumn>>;
+	limit?: Maybe<Scalars['Int']>;
+	offset?: Maybe<Scalars['Int']>;
+	order_by?: Maybe<Array<PollResultsOrderBy>>;
+	where?: Maybe<PollResultsBoolExp>;
+};
+
+export type QueryRootPollResultsByPkArgs = {
 	id: Scalars['uuid'];
 };
 
@@ -4342,6 +4602,12 @@ export type SubscriptionRoot = {
 	notebook_target_aggregate: NotebookTargetAggregate;
 	/** fetch data from the table: "notebook_target" using primary key columns */
 	notebook_target_by_pk?: Maybe<NotebookTarget>;
+	/** fetch data from the table: "poll_results" */
+	poll_results: Array<PollResults>;
+	/** fetch aggregated fields from the table: "poll_results" */
+	poll_results_aggregate: PollResultsAggregate;
+	/** fetch data from the table: "poll_results" using primary key columns */
+	poll_results_by_pk?: Maybe<PollResults>;
 	/** fetch data from the table: "professional" */
 	professional: Array<Professional>;
 	/** fetch aggregated fields from the table: "professional" */
@@ -4554,6 +4820,26 @@ export type SubscriptionRootNotebookTargetByPkArgs = {
 	id: Scalars['uuid'];
 };
 
+export type SubscriptionRootPollResultsArgs = {
+	distinct_on?: Maybe<Array<PollResultsSelectColumn>>;
+	limit?: Maybe<Scalars['Int']>;
+	offset?: Maybe<Scalars['Int']>;
+	order_by?: Maybe<Array<PollResultsOrderBy>>;
+	where?: Maybe<PollResultsBoolExp>;
+};
+
+export type SubscriptionRootPollResultsAggregateArgs = {
+	distinct_on?: Maybe<Array<PollResultsSelectColumn>>;
+	limit?: Maybe<Scalars['Int']>;
+	offset?: Maybe<Scalars['Int']>;
+	order_by?: Maybe<Array<PollResultsOrderBy>>;
+	where?: Maybe<PollResultsBoolExp>;
+};
+
+export type SubscriptionRootPollResultsByPkArgs = {
+	id: Scalars['uuid'];
+};
+
 export type SubscriptionRootProfessionalArgs = {
 	distinct_on?: Maybe<Array<ProfessionalSelectColumn>>;
 	limit?: Maybe<Scalars['Int']>;
@@ -4678,6 +4964,16 @@ export type UuidComparisonExp = {
 	_lte?: Maybe<Scalars['uuid']>;
 	_neq?: Maybe<Scalars['uuid']>;
 	_nin?: Maybe<Array<Scalars['uuid']>>;
+};
+
+export type CreatePollResultMutationVariables = Exact<{
+	answers?: Maybe<Scalars['jsonb']>;
+	campaign?: Maybe<Scalars['String']>;
+}>;
+
+export type CreatePollResultMutation = {
+	__typename?: 'mutation_root';
+	insert_poll_results_one?: Maybe<{ __typename?: 'poll_results'; id: string }>;
 };
 
 export type AddNotebookActionMutationVariables = Exact<{
@@ -5460,6 +5756,64 @@ export const EventFieldsFragmentDoc = {
 		},
 	],
 } as unknown as DocumentNode<EventFieldsFragment, unknown>;
+export const CreatePollResultDocument = {
+	kind: 'Document',
+	definitions: [
+		{
+			kind: 'OperationDefinition',
+			operation: 'mutation',
+			name: { kind: 'Name', value: 'CreatePollResult' },
+			variableDefinitions: [
+				{
+					kind: 'VariableDefinition',
+					variable: { kind: 'Variable', name: { kind: 'Name', value: 'answers' } },
+					type: { kind: 'NamedType', name: { kind: 'Name', value: 'jsonb' } },
+					defaultValue: { kind: 'StringValue', value: '', block: false },
+				},
+				{
+					kind: 'VariableDefinition',
+					variable: { kind: 'Variable', name: { kind: 'Name', value: 'campaign' } },
+					type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+					defaultValue: { kind: 'StringValue', value: '', block: false },
+				},
+			],
+			selectionSet: {
+				kind: 'SelectionSet',
+				selections: [
+					{
+						kind: 'Field',
+						name: { kind: 'Name', value: 'insert_poll_results_one' },
+						arguments: [
+							{
+								kind: 'Argument',
+								name: { kind: 'Name', value: 'object' },
+								value: {
+									kind: 'ObjectValue',
+									fields: [
+										{
+											kind: 'ObjectField',
+											name: { kind: 'Name', value: 'answers' },
+											value: { kind: 'Variable', name: { kind: 'Name', value: 'answers' } },
+										},
+										{
+											kind: 'ObjectField',
+											name: { kind: 'Name', value: 'campaign' },
+											value: { kind: 'Variable', name: { kind: 'Name', value: 'campaign' } },
+										},
+									],
+								},
+							},
+						],
+						selectionSet: {
+							kind: 'SelectionSet',
+							selections: [{ kind: 'Field', name: { kind: 'Name', value: 'id' } }],
+						},
+					},
+				],
+			},
+		},
+	],
+} as unknown as DocumentNode<CreatePollResultMutation, CreatePollResultMutationVariables>;
 export const AddNotebookActionDocument = {
 	kind: 'Document',
 	definitions: [
@@ -9191,6 +9545,10 @@ export const UpdateProfessionalProfileDocument = {
 } as unknown as DocumentNode<
 	UpdateProfessionalProfileMutation,
 	UpdateProfessionalProfileMutationVariables
+>;
+export type CreatePollResultMutationStore = OperationStore<
+	CreatePollResultMutation,
+	CreatePollResultMutationVariables
 >;
 export type AddNotebookActionMutationStore = OperationStore<
 	AddNotebookActionMutation,
