@@ -21,6 +21,7 @@
 
 <script lang="ts">
 	import LoaderIndicator from '$lib/ui/utils/LoaderIndicator.svelte';
+	import Polling from '$lib/ui/Polling/index.svelte';
 
 	export let result: GetLastVisitedOrUpdatedQueryStore;
 
@@ -47,6 +48,7 @@
 
 	<LoaderIndicator {result}>
 		<div>
+			<Polling />
 			<h2 class="fr-h5 text-france-blue">Derniers profils consultés</h2>
 			<div class="flex flex-row flex-wrap justify-between gap-1">
 				{#each $result.data.lastVisited as lastVisited, i (i)}

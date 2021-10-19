@@ -1,5 +1,4 @@
 <script context="module" lang="ts">
-	import Polling from '$lib/ui/Polling/index.svelte';
 	import { post } from '$lib/utils/post';
 	import type { GetAccountsSummaryQuery } from '$lib/graphql/_gen/typed-document-nodes';
 	import { GetAccountsSummaryDocument } from '$lib/graphql/_gen/typed-document-nodes';
@@ -85,7 +84,6 @@
 			btnLabel="Rechercher"
 			{handleSubmit}
 		/>
-		<Polling />
 		<div class={`w-full fr-table fr-table--layout-fixed`}>
 			<table>
 				<thead>

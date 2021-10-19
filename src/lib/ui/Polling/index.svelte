@@ -3,9 +3,17 @@
 </script>
 
 <script lang="ts">
+	import {
+		CreatePollResultDocument,
+	} from '$lib/graphql/_gen/typed-document-nodes';
+	import { mutation, operationStore } from '@urql/svelte';
+
+	const createPollResultStore = operationStore(CreatePollResultDocument);
+	const createPoll = mutation(createPollResultStore);
 	import { Button } from '$lib/ui/base';
 
 	type Question = {
+		key: string;
 		title: string;
 		subtitle: string;
 		lowerBound: string;
@@ -13,23 +21,26 @@
 		answer?: string;
 	};
 	let satisfactionQuestion: Question = {
+		key: 'satisfaction',
 		title: 'Êtes-vous satisfait(e) de Carnet de bord ?',
 		subtitle: "Est-ce que l'outil répond à vos attentes ?",
 		lowerBound: 'Pas du tout',
 		upperBound: 'Complètement',
 	};
 	let recommendQuestion: Question = {
+		key: 'recommandation',
 		title: 'Recommanderiez-vous Carnet de bord ?',
 		subtitle: 'À des collègues, des partenaires, etc.',
 		lowerBound: 'Pas du tout',
 		upperBound: 'Complètement',
 	};
+
+	const campaign = '2021-01';
 	let questions = [satisfactionQuestion, recommendQuestion];
 	let currentIndex = 0;
 	let currentQuestion: Question = questions[currentIndex];
 	let currentGrade: string;
 	let collapsed = true;
-	let onClose: () => void;
 
 	function move(forward: boolean) {
 		if (currentQuestion) {
@@ -48,8 +59,15 @@
 		}
 	}
 
-	function save() {
-		console.log('saving', { questions });
+	async function save() {
+		const answers = JSON.stringify(
+			questions.reduce((acc, { key, answer }) => {
+				acc[key] = answer;
+				return acc;
+			}, {})
+		);
+		console.log('saving', { campaign, answers });
+		const store = await createPoll({ campaign, answers });
 	}
 
 	function close(neverAgain: boolean) {
