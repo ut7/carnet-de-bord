@@ -2,28 +2,28 @@ mutation UpdateManagerProfile(
 	$firstname: String!
 	$lastname: String!
 	$email: citext!
-	$managerId: uuid!
+	$id: uuid!
+	$accountId: uuid!
 ) {
-	updateManager: update_manager(
+	updateManager: update_manager_by_pk(
 		_set: { firstname: $firstname, lastname: $lastname, email: $email }
-		where: { id: { _eq: $managerId } }
+		pk_columns: { id: $id }
 	) {
-		affected_rows
+		id
 	}
-	updateAccount: update_account(
-		where: { managerId: { _eq: $managerId } }
+	updateAccount: update_account_by_pk(
+		pk_columns: { id: $accountId }
 		_set: { onboardingDone: true }
 	) {
-		returning {
+		id
+		onboardingDone
+		confirmed
+		username
+		manager {
 			id
-			onboardingDone
-			confirmed
-			username
-			manager {
-				firstname
-				lastname
-				email
-			}
+			firstname
+			lastname
+			email
 		}
 	}
 }

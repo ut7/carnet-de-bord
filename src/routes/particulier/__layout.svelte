@@ -32,9 +32,11 @@
 		if (result.data) {
 			const acc = result.data.account_by_pk;
 			if (acc) {
-				const { username, onboardingDone, confirmed } = acc;
-				const { firstname, lastname, email, mobileNumber } = acc.beneficiary;
+				const { username, onboardingDone, confirmed, id: accountId } = acc;
+				const { id, firstname, lastname, email, mobileNumber } = acc.beneficiary;
 				$account = {
+					id,
+					accountId,
 					username,
 					onboardingDone,
 					confirmed,

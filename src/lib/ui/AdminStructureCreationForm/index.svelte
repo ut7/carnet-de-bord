@@ -21,7 +21,7 @@
 	let:isSubmitted
 	let:isValid
 >
-	<div>
+	<div class="max-w-sm">
 		<h2 class="text-france-blue fr-h4">Informations personnelles</h2>
 
 		<Input placeholder="Jean Baptiste" inputLabel="Prénom" name="firstname" required />

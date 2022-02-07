@@ -1,49 +1,50 @@
-<script context="module" lang="ts">
-	import type { GetAccountByPkQuery } from '$lib/graphql/_gen/typed-document-nodes';
-	import { GetAccountByPkDocument } from '$lib/graphql/_gen/typed-document-nodes';
-	import { operationStore, query } from '@urql/svelte';
-</script>
-
 <script lang="ts">
-	import { session } from '$app/stores';
 	import { account, openComponent } from '$lib/stores';
 	import AdminStructureAccountEdit from '$lib/ui/AdminStructureAccount/AdminStructureAccountEdit.svelte';
 	import AdminStructureView from '$lib/ui/AdminStructureView.svelte';
 	import { Button } from '$lib/ui/base';
+	import { homeForRole, Segment } from '$lib/routes';
+	import Breadcrumbs from '$lib/ui/base/Breadcrumbs.svelte';
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 
-	let adminStructure: GetAccountByPkQuery['account_by_pk']['admin_structure'];
-	const getAccountStore = operationStore(GetAccountByPkDocument, { accountId: $session?.user?.id });
-	query(getAccountStore);
-
-	$: adminStructure = $getAccountStore?.data?.account_by_pk?.admin_structure;
 	function editAccount() {
 		openComponent.open({
 			component: AdminStructureAccountEdit,
-			props: { adminStructure },
+			props: { adminStructure: $account },
 		});
 	}
+
+	onMount(() => {
+		if (!$account.onboardingDone) {
+			goto(homeForRole('admin_structure'));
+		}
+	});
+
+	const breadcrumbs: Segment[] = [
+		{
+			name: 'accueil',
+			path: '/admin_structure',
+			label: 'Accueil',
+		},
+		{
+			name: 'profile',
+			path: '/mon compte',
+			label: 'Mon compte',
+		},
+	];
 </script>
 
 <svelte:head>
 	<title>Mon compte - Carnet de bord</title>
 </svelte:head>
 
-{#if $account}
-	<h1 class="fr-h2">
-		{$account.onboardingDone ? 'Mon compte' : 'Première connexion à Carnet de bord'}
-	</h1>
-	{#if !$account.onboardingDone}
-		<p>
-			Bienvenue sur Carnet de bord ! Pour cette première connexion, nous vous invitons à vérifier et
-			mettre à jour les informations ci-dessous en cliquant sur le bouton "Mettre à jour".
-			<br />
-			Vous pourrez les modifier à nouveau plus tard en cliquant sur "Mon compte" dans la barre de menu.
-		</p>
-	{/if}
-	{#if adminStructure}
-		<AdminStructureView {adminStructure} />
-	{/if}
-	<div>
+<Breadcrumbs segments={breadcrumbs} />
+
+{#if $account && 'phoneNumbers' in $account}
+	<h1 class="fr-h2">Mon compte</h1>
+	<AdminStructureView adminStructure={$account} />
+	<div class="pt-8">
 		<Button on:click={editAccount} outline={true}>Mettre à jour</Button>
 	</div>
 {/if}

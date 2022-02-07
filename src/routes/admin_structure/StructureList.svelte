@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { StructureCard } from './index.svelte';
-
 	export let structures: StructureCard[];
 </script>
 
