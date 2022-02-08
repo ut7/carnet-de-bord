@@ -29,6 +29,7 @@
 	import AdminStructureAccountEdit from '$lib/ui/AdminStructureAccount/AdminStructureAccountEdit.svelte';
 	import type { Segment } from '$lib/routes';
 	import Breadcrumbs from '$lib/ui/base/Breadcrumbs.svelte';
+	import type { ConnectedAdminStructure } from '$lib/stores/account';
 
 	export let structureResult = operationStore(GetManagedStructuresDocument, {});
 
@@ -50,22 +51,23 @@
 			label: 'Accueil',
 		},
 	];
+	function toConnectedAdminStructure(admin) {
+		return admin as ConnectedAdminStructure;
+	}
 </script>
 
 <svelte:head>
 	<title>Gestion des structures - Carnet de bord</title>
 </svelte:head>
 
-{#if !$account?.onboardingDone && 'phonNumbers' in $account}
+{#if !$account?.onboardingDone}
 	<div class="pt-12">
-		<AdminStructureAccountEdit adminStructure={$account} />
+		<AdminStructureAccountEdit adminStructure={toConnectedAdminStructure($account)} />
 	</div>
 {:else}
 	<Breadcrumbs segments={breadcrumbs} />
 	<LoaderIndicator result={structureResult}>
-		<div class="flex flex-col gap-8">
-			<h1 class="fr-h4">Mes structures</h1>
-			<StructureList {structures} />
-		</div>
+		<h1>Mes structures</h1>
+		<StructureList {structures} />
 	</LoaderIndicator>
 {/if}

@@ -48,11 +48,12 @@
 </script>
 
 <HeaderCDB {menuItems} />
+
 <div class="fr-container fr-mb-8w">
 	<LoaderIndicator {result}>
 		<slot />
 	</LoaderIndicator>
-	<LayerCDB />
 </div>
+<LayerCDB />
 
 <FooterCDB />

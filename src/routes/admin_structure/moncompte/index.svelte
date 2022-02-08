@@ -7,6 +7,7 @@
 	import Breadcrumbs from '$lib/ui/base/Breadcrumbs.svelte';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import type { ConnectedAdminStructure } from '$lib/stores/account';
 
 	function editAccount() {
 		openComponent.open({
@@ -33,6 +34,9 @@
 			label: 'Mon compte',
 		},
 	];
+	function toConnectedAdminStructure(admin) {
+		return admin as ConnectedAdminStructure;
+	}
 </script>
 
 <svelte:head>
@@ -41,10 +45,8 @@
 
 <Breadcrumbs segments={breadcrumbs} />
 
-{#if $account && 'phoneNumbers' in $account}
-	<h1 class="fr-h2">Mon compte</h1>
-	<AdminStructureView adminStructure={$account} />
-	<div class="pt-8">
-		<Button on:click={editAccount} outline={true}>Mettre à jour</Button>
-	</div>
-{/if}
+<h1>Mon compte</h1>
+<AdminStructureView adminStructure={toConnectedAdminStructure($account)} />
+<div class="pt-8">
+	<Button on:click={editAccount} outline={true}>Mettre à jour</Button>
+</div>
