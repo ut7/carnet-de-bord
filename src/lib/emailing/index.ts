@@ -12,12 +12,13 @@ function send<K extends keyof typeof templates>({
 	template: K;
 	params: Parameters<typeof templates[K]>;
 }): Promise<SentMessageInfo> {
-	if (!templates[template]) {
+	const typedTemplate = templates[template];
+	if (!typedTemplate) {
 		throw `Invalid template name: ${template}. Available templates are: ${Object.keys(
 			templates
 		).join(', ')}.`;
 	}
-	return sender({ ...options, html: templates[template].apply(null, params) });
+	return sender({ ...options, html: typedTemplate.apply(null, params) });
 }
 
 export default send;

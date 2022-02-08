@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let value: string;
+	export let value: string | null = null;
 	export let classNames = '';
 	export let defaultValue = '-';
 	export let defaultValueClassNames = '';

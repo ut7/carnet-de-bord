@@ -8,9 +8,10 @@
 	import DebugForm from './DebugForm.svelte';
 	import type { ObjectShape } from 'yup/lib/object';
 
-	export let initialValues: Record<string, unknown>;
+	type Values = $$Generic;
+	export let initialValues: Values;
 	export let validationSchema: ObjectSchema<ObjectShape>;
-	export let onSubmit: (values: Record<string, unknown>) => void;
+	export let onSubmit: (values: Values) => void;
 
 	const formHandler = createForm({ initialValues, validationSchema, onSubmit });
 

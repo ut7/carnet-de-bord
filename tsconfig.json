@@ -1,5 +1,13 @@
 {
 	"compilerOptions": {
+		"strict": false,
+		"noImplicitAny": false,
+		"strictFunctionTypes": true,
+		"strictBindCallApply": true,
+		"strictNullChecks": false,
+		"strictPropertyInitialization": false,
+		"noImplicitThis": true,
+		"alwaysStrict": false,
 		"moduleResolution": "node",
 		"module": "es2020",
 		"lib": ["es2020"],

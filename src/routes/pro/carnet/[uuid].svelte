@@ -10,6 +10,7 @@
 	} from '$lib/graphql/_gen/typed-document-nodes';
 	import { stringsMatch } from '$lib/helpers';
 	import { MainAccordion, Accordions, Select, SearchBar } from '$lib/ui/base';
+import Identity from '$lib/ui/Identity.svelte';
 	import { ProNotebookFocusView } from '$lib/ui/ProNotebookFocus';
 	import { ProNotebookMembersView } from '$lib/ui/ProNotebookMember';
 	import { ProNotebookPersonalInfoView } from '$lib/ui/ProNotebookPersonalInfo';
@@ -48,8 +49,8 @@
 		},
 		selected: Period
 	) {
-		let eventsStart: Date;
-		let eventsEnd: Date;
+		let eventsStart: Date | null = null;
+		let eventsEnd: Date | null = null;
 		const today = new Date();
 		if (selected === threeMonths) {
 			eventsStart = addMonths(today, -3);
@@ -114,17 +115,16 @@
 
 	function onSelect(event: CustomEvent<{ selected: Period }>) {
 		selected = event.detail.selected;
-		$getNotebookEvents.context.pause = false;
+		const context = $getNotebookEvents.context;
+		if (context) {
+			context.pause = false;
+		}
 		const variables = { notebookId };
 		$getNotebookEvents.variables = buildQueryVariables(variables, selected);
 		$getNotebookEvents.reexecute();
 	}
 
-	$: notebook = $getNotebook.data?.notebook;
-	$: events = $getNotebookEvents.data?.notebook_event || $getNotebook.data?.notebook.events;
-	$: beneficiary = notebook?.beneficiary;
-	$: members = notebook?.members;
-	$: lastMember = members?.length ? members[0] : null;
+	$: events = $getNotebookEvents.data?.notebook_event || $getNotebook.data?.notebook?.events || [];
 
 	let search = '';
 
@@ -141,84 +141,96 @@
 </svelte:head>
 
 <LoaderIndicator result={getNotebook}>
-	<ProNotebookPersonalInfoView
-		{beneficiary}
-		on:edit={() => alert('Not implemented!')}
-		on:print={() => alert('Not implemented!')}
-		lastUpdateDate={lastMember?.lastModifiedAt}
-		lastUpdateFrom={lastMember?.professional}
-	/>
-	<Accordions>
-		<MainAccordion title="Situation socioprofessionnelle">
-			<ProNotebookSocioProView {notebook} />
-		</MainAccordion>
-		<MainAccordion title="Groupe de suivi">
-			<ProNotebookMembersView
-				{members}
-				notebookId={notebook.id}
-				beneficiaryFirstname={beneficiary.firstname}
-				beneficiaryLastname={beneficiary.lastname}
-			/>
-		</MainAccordion>
-		<MainAccordion title="Axes de travail">
-			<ProNotebookFocusView {notebook} focuses={notebook.focuses} />
-		</MainAccordion>
-		<MainAccordion title="Historique de parcours">
-			<div class="flex flex-row justify-between mb-2">
-				<Select
-					on:select={onSelect}
-					options={[
-						{ name: allEvents, label: 'Tous les évènements' },
-						{ name: threeMonths, label: 'Dans les 3 derniers mois' },
-						{ name: threeSixMonths, label: 'Entre les 3 et 6 derniers mois' },
-						{ name: sixTwelveMonths, label: 'Entre les 6 et 12 derniers mois' },
-						{ name: twelveMonths, label: 'Il y a plus de 12 mois' },
-					]}
-					{selected}
-					selectHint="Sélectionner un filtre"
-					selectLabel="Période"
-					classNames="self-center"
-					twWidthClass="w-5/12"
+	<svelte:fragment slot="data" let:data>
+		{@const notebook = data.notebook}
+		{#if !notebook}
+			Ce carnet n'a pas été trouvé.
+		{:else}
+			<Identity>
+				{@const beneficiary = notebook.beneficiary}
+				{@const members = notebook.members}
+				{@const lastMember = members.length ? members[0] : null}
+				<ProNotebookPersonalInfoView
+					{beneficiary}
+					on:edit={() => alert('Not implemented!')}
+					on:print={() => alert('Not implemented!')}
+					lastUpdateDate={lastMember?.lastModifiedAt}
+					lastUpdateFrom={lastMember?.professional}
 				/>
-				<SearchBar
-					inputLabel=""
-					inputHint="Axe de travail, action, structure"
-					bind:search
-					handleSubmit={handleSearch}
-					classNames="self-center"
-					twWidthClass="w-5/12"
-				/>
-			</div>
-			<div class={`w-full fr-table fr-table--layout-fixed`}>
-				<table class="w-full">
-					<thead>
-						<tr>
-							<th>Date</th>
-							<th>Évènements</th>
-							<th>Auteurs</th>
-						</tr>
-					</thead>
-					<tbody class="w-full">
-						{#each filteredEvents || [] as event (event.id)}
-							<tr>
-								<td>{formatDateLocale(event.eventDate)} </td>
-								<td>{event.event}</td>
-								<td>{event.structure} </td>
-							</tr>
-						{:else}
-							<tr class="shadow-sm">
-								<td class="!text-center" colspan="3">
-									{#if events.length > 0}
-										Aucun évènement ne correspond à votre recherche.
+				<Accordions>
+					<MainAccordion title="Situation socioprofessionnelle">
+						<ProNotebookSocioProView {notebook} />
+					</MainAccordion>
+					<MainAccordion title="Groupe de suivi">
+						<ProNotebookMembersView
+							{members}
+							notebookId={notebook.id}
+							beneficiaryFirstname={beneficiary.firstname}
+							beneficiaryLastname={beneficiary.lastname}
+						/>
+					</MainAccordion>
+					<MainAccordion title="Axes de travail">
+						<ProNotebookFocusView {notebook} focuses={notebook.focuses} />
+					</MainAccordion>
+					<MainAccordion title="Historique de parcours">
+						<div class="flex flex-row justify-between mb-2">
+							<Select
+								on:select={onSelect}
+								options={[
+									{ name: allEvents, label: 'Tous les évènements' },
+									{ name: threeMonths, label: 'Dans les 3 derniers mois' },
+									{ name: threeSixMonths, label: 'Entre les 3 et 6 derniers mois' },
+									{ name: sixTwelveMonths, label: 'Entre les 6 et 12 derniers mois' },
+									{ name: twelveMonths, label: 'Il y a plus de 12 mois' },
+								]}
+								{selected}
+								selectHint="Sélectionner un filtre"
+								selectLabel="Période"
+								classNames="self-center"
+								twWidthClass="w-5/12"
+							/>
+							<SearchBar
+								inputLabel=""
+								inputHint="Axe de travail, action, structure"
+								bind:search
+								handleSubmit={handleSearch}
+								classNames="self-center"
+								twWidthClass="w-5/12"
+							/>
+						</div>
+						<div class={`w-full fr-table fr-table--layout-fixed`}>
+							<table class="w-full">
+								<thead>
+									<tr>
+										<th>Date</th>
+										<th>Évènements</th>
+										<th>Auteurs</th>
+									</tr>
+								</thead>
+								<tbody class="w-full">
+									{#each filteredEvents as event (event.id)}
+										<tr>
+											<td>{formatDateLocale(event.eventDate)} </td>
+											<td>{event.event}</td>
+											<td>{event.structure} </td>
+										</tr>
 									{:else}
-										Aucun évènement pour le moment.
-									{/if}
-								</td>
-							</tr>
-						{/each}
-					</tbody>
-				</table>
-			</div>
-		</MainAccordion>
-	</Accordions>
+										<tr class="shadow-sm">
+											<td class="!text-center" colspan="3">
+												{#if events.length > 0}
+													Aucun évènement ne correspond à votre recherche.
+												{:else}
+													Aucun évènement pour le moment.
+												{/if}
+											</td>
+										</tr>
+									{/each}
+								</tbody>
+							</table>
+						</div>
+					</MainAccordion>
+				</Accordions>
+			</Identity>
+		{/if}
+	</svelte:fragment>
 </LoaderIndicator>

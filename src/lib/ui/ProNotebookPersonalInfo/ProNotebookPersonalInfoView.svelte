@@ -22,8 +22,8 @@
 		| 'cafNumber'
 		| 'peNumber'
 	>;
-	export let lastUpdateDate: string;
-	export let lastUpdateFrom: Pick<Professional, 'firstname' | 'lastname'>;
+	export let lastUpdateDate: string | null = null;
+	export let lastUpdateFrom: Pick<Professional, 'firstname' | 'lastname'> | null = null;
 
 	function edit() {
 		openComponent.open({ component: ProNotebookPersonalInfoUpdate, props: { beneficiary } });
@@ -32,7 +32,7 @@
 
 <div class="flex flex-col space-y-6 pt-2">
 	<div>
-		{#if lastUpdateDate}
+		{#if lastUpdateDate && lastUpdateFrom}
 			<div class="text-sm">
 				Informations mises à jour le {formatDateLocale(lastUpdateDate, {
 					year: 'numeric',

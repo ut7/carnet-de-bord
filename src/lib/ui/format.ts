@@ -8,7 +8,7 @@ export const displayFullName = ({
 	lastname?: string;
 }): string => [firstname, lastname].filter((field) => notNullish(field)).join(' ');
 
-export const displayMobileNumber = ({ mobileNumber }: { mobileNumber?: string }): string | null => {
+export const displayMobileNumber = ({ mobileNumber }: { mobileNumber?: string | null }): string | null => {
 	if (!mobileNumber) {
 		return null;
 	}
