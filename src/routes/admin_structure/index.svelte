@@ -3,6 +3,7 @@
 	import type { Load } from '@sveltejs/kit';
 	import { operationStore, query } from '@urql/svelte';
 	export type StructureCard = {
+		id: string;
 		name: string;
 		city: string;
 		nbAdmin: number;
@@ -34,6 +35,7 @@
 	query(structureResult);
 
 	$: structures = $structureResult.data?.structures.map((data) => ({
+		id: data.id,
 		name: data.name,
 		city: data.city,
 		nbAdmin: data.admins_aggregate.aggregate.count,

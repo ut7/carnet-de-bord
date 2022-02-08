@@ -7776,6 +7776,29 @@ export type UpdateAdminStructureProfileMutation = {
 		| undefined;
 };
 
+export type GetStructureQueryVariables = Exact<{
+	structureId: Scalars['uuid'];
+}>;
+
+export type GetStructureQuery = {
+	__typename?: 'query_root';
+	structure_by_pk?:
+		| {
+				__typename?: 'structure';
+				id: string;
+				name?: string | null | undefined;
+				admins_aggregate: {
+					__typename?: 'admin_structure_structure_aggregate';
+					nodes: Array<{
+						__typename?: 'admin_structure_structure';
+						admin_structure: { __typename?: 'admin_structure'; id: string; email: string };
+					}>;
+				};
+		  }
+		| null
+		| undefined;
+};
+
 export type GetAccountInfoQueryVariables = Exact<{
 	accessKey: Scalars['String'];
 }>;
@@ -13261,6 +13284,78 @@ export const UpdateAdminStructureProfileDocument = {
 	UpdateAdminStructureProfileMutation,
 	UpdateAdminStructureProfileMutationVariables
 >;
+export const GetStructureDocument = {
+	kind: 'Document',
+	definitions: [
+		{
+			kind: 'OperationDefinition',
+			operation: 'query',
+			name: { kind: 'Name', value: 'GetStructure' },
+			variableDefinitions: [
+				{
+					kind: 'VariableDefinition',
+					variable: { kind: 'Variable', name: { kind: 'Name', value: 'structureId' } },
+					type: {
+						kind: 'NonNullType',
+						type: { kind: 'NamedType', name: { kind: 'Name', value: 'uuid' } },
+					},
+				},
+			],
+			selectionSet: {
+				kind: 'SelectionSet',
+				selections: [
+					{
+						kind: 'Field',
+						name: { kind: 'Name', value: 'structure_by_pk' },
+						arguments: [
+							{
+								kind: 'Argument',
+								name: { kind: 'Name', value: 'id' },
+								value: { kind: 'Variable', name: { kind: 'Name', value: 'structureId' } },
+							},
+						],
+						selectionSet: {
+							kind: 'SelectionSet',
+							selections: [
+								{ kind: 'Field', name: { kind: 'Name', value: 'id' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'name' } },
+								{
+									kind: 'Field',
+									name: { kind: 'Name', value: 'admins_aggregate' },
+									selectionSet: {
+										kind: 'SelectionSet',
+										selections: [
+											{
+												kind: 'Field',
+												name: { kind: 'Name', value: 'nodes' },
+												selectionSet: {
+													kind: 'SelectionSet',
+													selections: [
+														{
+															kind: 'Field',
+															name: { kind: 'Name', value: 'admin_structure' },
+															selectionSet: {
+																kind: 'SelectionSet',
+																selections: [
+																	{ kind: 'Field', name: { kind: 'Name', value: 'id' } },
+																	{ kind: 'Field', name: { kind: 'Name', value: 'email' } },
+																],
+															},
+														},
+													],
+												},
+											},
+										],
+									},
+								},
+							],
+						},
+					},
+				],
+			},
+		},
+	],
+} as unknown as DocumentNode<GetStructureQuery, GetStructureQueryVariables>;
 export const GetAccountInfoDocument = {
 	kind: 'Document',
 	definitions: [
@@ -16818,6 +16913,7 @@ export type UpdateAdminStructureProfileMutationStore = OperationStore<
 	UpdateAdminStructureProfileMutation,
 	UpdateAdminStructureProfileMutationVariables
 >;
+export type GetStructureQueryStore = OperationStore<GetStructureQuery, GetStructureQueryVariables>;
 export type GetAccountInfoQueryStore = OperationStore<
 	GetAccountInfoQuery,
 	GetAccountInfoQueryVariables

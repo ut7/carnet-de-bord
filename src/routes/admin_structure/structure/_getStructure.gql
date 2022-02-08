@@ -1,0 +1,14 @@
+query GetStructure($structureId: uuid!) {
+	structure_by_pk(id: $structureId) {
+		id
+		name
+		admins_aggregate {
+			nodes {
+				admin_structure {
+					id
+					email
+				}
+			}
+		}
+	}
+}
