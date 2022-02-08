@@ -7,7 +7,8 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import type { ConnectedAdminStructure } from '$lib/stores/account';
-	import { homeForRole, Segment } from '$lib/routes';
+	import { baseUrlForRole, homeForRole, Segment } from '$lib/routes';
+	console.log('test');
 
 	function editAccount() {
 		openComponent.open({
@@ -18,7 +19,7 @@
 
 	onMount(() => {
 		if (!$account.onboardingDone) {
-			goto('/admin_structure/bienvenue');
+			goto(`${baseUrlForRole('admin_structure')}/bienvenue`);
 		}
 	});
 

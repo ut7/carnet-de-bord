@@ -1,7 +1,8 @@
 <script context="module" lang="ts">
 	import type { GetStructureQueryStore } from '$lib/graphql/_gen/typed-document-nodes';
 	import { GetStructureDocument } from '$lib/graphql/_gen/typed-document-nodes';
-	import { Card } from '$lib/ui/base';
+	import { homeForRole } from '$lib/routes';
+	import { Breadcrumbs, Card } from '$lib/ui/base';
 	import { LoaderIndicator } from '$lib/ui/utils';
 	import type { Load } from '@sveltejs/kit';
 	import { operationStore, query } from '@urql/svelte';
@@ -28,6 +29,19 @@
 
 	$: structure = $getStructure.data?.structure_by_pk;
 	$: members = structure?.admins_aggregate?.nodes?.map(({ admin_structure }) => admin_structure);
+
+	$: breadcrumbs = [
+		{
+			name: 'accueil',
+			path: homeForRole('admin_structure'),
+			label: 'Accueil',
+		},
+		{
+			name: 'structure',
+			path: '',
+			label: `${structure?.name ?? ''}`,
+		},
+	];
 	$: metrics = [
 		{ label: 'Bénéficiaires', amount: 0 },
 		{ label: 'Professionnels', amount: structure?.professionals_aggregate?.aggregate?.count ?? 0 },
@@ -43,6 +57,7 @@
 	<title>Structure - Carnet de bord</title>
 </svelte:head>
 
+<Breadcrumbs segments={breadcrumbs} />
 <LoaderIndicator result={getStructure}>
 	<div class="flex flex-col gap-6">
 		<h1 class="fr-h2">{structure.name}</h1>
