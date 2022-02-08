@@ -40,6 +40,7 @@
 				const { id, firstname, lastname, email, mobileNumber, position, structure } =
 					acc.professional;
 				$account = {
+					type: 'pro',
 					id,
 					accountId,
 					username,

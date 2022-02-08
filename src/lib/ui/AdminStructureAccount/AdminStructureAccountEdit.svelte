@@ -56,15 +56,7 @@
 </script>
 
 <div class="flex flex-col gap-4">
-	{#if !adminStructure.onboardingDone}
-		<h1>Création de mon compte Gestionnaire de structure</h1>
-		<p>
-			Vous avez été invité(e) à créer votre compte de Gestionnaire de structures.
-			<br /> Il ne reste plus que quelques étapes pour accéder à tous les services proposés !
-		</p>
-	{:else}
-		<h1>Mettre à jour mon compte</h1>
-	{/if}
+	<h1>Mettre à jour mon compte</h1>
 
 	{#if $updateResult?.data}
 		<p>Votre compte a été modifié avec succès !</p>

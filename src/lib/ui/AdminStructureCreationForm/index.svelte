@@ -10,7 +10,7 @@
 	export let submitLabel = 'Je valide mon inscription';
 	export let accountRequest: Partial<AccountRequest> & { phoneNumbers?: string } = {};
 	export let onSubmit: (values: AdminStructureAccountInput) => void;
-	export let onCancel: () => void;
+	export let onCancel: () => void = null;
 </script>
 
 <Form
@@ -38,7 +38,7 @@
 			<Button type="submit" disabled={(isSubmitted && !isValid) || isSubmitting}
 				>{submitLabel}</Button
 			>
-			<Button outline={true} on:click={onCancel}>Annuler</Button>
+			{#if onCancel}<Button outline={true} on:click={onCancel}>Annuler</Button>{/if}
 		</div>
 	</div>
 </Form>

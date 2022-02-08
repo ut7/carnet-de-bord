@@ -18,21 +18,25 @@ type BaseConnectedUser = {
 };
 
 export type ConnectedPro = BaseConnectedUser & {
+	type: 'pro';
 	email: string;
 	position: string;
 	mobileNumber: string;
 };
 
 export type ConnectedAdminStructure = BaseConnectedUser & {
+	type: 'adminStructure';
 	email: string;
 	phoneNumbers: string;
 };
 
 export type ConnectedManager = BaseConnectedUser & {
+	type: 'manager';
 	email: string;
 };
 
 export type ConnectedBeneficiary = BaseConnectedUser & {
+	type: 'beneficiary';
 	email: string;
 	mobileNumber: string;
 };

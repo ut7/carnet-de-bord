@@ -3,11 +3,11 @@
 	import AdminStructureAccountEdit from '$lib/ui/AdminStructureAccount/AdminStructureAccountEdit.svelte';
 	import AdminStructureView from '$lib/ui/AdminStructureView.svelte';
 	import { Button } from '$lib/ui/base';
-	import { homeForRole, Segment } from '$lib/routes';
 	import Breadcrumbs from '$lib/ui/base/Breadcrumbs.svelte';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import type { ConnectedAdminStructure } from '$lib/stores/account';
+	import { homeForRole, Segment } from '$lib/routes';
 
 	function editAccount() {
 		openComponent.open({
@@ -18,19 +18,19 @@
 
 	onMount(() => {
 		if (!$account.onboardingDone) {
-			goto(homeForRole('admin_structure'));
+			goto('/admin_structure/bienvenue');
 		}
 	});
 
 	const breadcrumbs: Segment[] = [
 		{
 			name: 'accueil',
-			path: '/admin_structure',
+			path: homeForRole('admin_structure'),
 			label: 'Accueil',
 		},
 		{
 			name: 'profile',
-			path: '/mon compte',
+			path: '',
 			label: 'Mon compte',
 		},
 	];

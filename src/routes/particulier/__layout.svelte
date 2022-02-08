@@ -35,6 +35,7 @@
 				const { username, onboardingDone, confirmed, id: accountId } = acc;
 				const { id, firstname, lastname, email, mobileNumber } = acc.beneficiary;
 				$account = {
+					type: 'beneficiary',
 					id,
 					accountId,
 					username,

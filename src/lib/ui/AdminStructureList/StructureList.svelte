@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { baseUrlForRole } from '$lib/routes';
 
-	import { Button } from '$lib/ui/base';
-	import type { StructureCard } from './index.svelte';
+	import type { StructureCard } from '../../../routes/structures/index.svelte';
 
 	export let structures: StructureCard[];
 </script>
@@ -13,7 +12,7 @@
 			<div class="fr-card fr-card--horizontal fr-enlarge-link">
 				<div class="fr-card__body">
 					<h4 class="fr-card__title">
-						<a href={`/admin_structure/structure/${structure.id}`} class="fr-card__link"
+						<a href={`${baseUrlForRole('admin_structure')}/${structure.id}`} class="fr-card__link"
 							>{structure.name}</a
 						>
 					</h4>

@@ -21,6 +21,7 @@ mutation UpdateAdminStructureProfile(
 		confirmed
 		username
 		admin_structure {
+			id
 			firstname
 			lastname
 			email

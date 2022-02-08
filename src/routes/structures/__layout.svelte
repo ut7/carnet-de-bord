@@ -23,6 +23,7 @@
 	import { FooterCDB, HeaderCDB, LayerCDB } from '$lib/ui';
 	import { onDestroy } from 'svelte';
 	import LoaderIndicator from '$lib/ui/utils/LoaderIndicator.svelte';
+	import { homeForRole } from '$lib/routes';
 
 	export let result: OperationStore<GetAccountByPkQuery>;
 
@@ -31,8 +32,20 @@
 	const unsubscribe = result.subscribe((result) => {
 		if (result.data?.account_by_pk.admin_structure) {
 			const { username, onboardingDone, confirmed, id: accountId } = result.data.account_by_pk;
-			const { id, firstname, lastname, email } = result.data.account_by_pk.admin_structure;
-			$account = { accountId, id, username, onboardingDone, confirmed, firstname, lastname, email };
+			const { id, firstname, lastname, email, phoneNumbers } =
+				result.data.account_by_pk.admin_structure;
+			$account = {
+				type: 'adminStructure',
+				phoneNumbers,
+				accountId,
+				id,
+				username,
+				onboardingDone,
+				confirmed,
+				firstname,
+				lastname,
+				email,
+			};
 		}
 	});
 
@@ -41,7 +54,7 @@
 	const menuItems: MenuItem[] = [
 		{
 			id: 'accueil',
-			path: '/admin_structure',
+			path: homeForRole('admin_structure'),
 			label: 'Accueil',
 		},
 	];

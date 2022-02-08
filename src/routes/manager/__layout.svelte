@@ -36,6 +36,7 @@
 				const { username, onboardingDone, confirmed, id: accountId } = acc;
 				const { id, firstname, lastname, email } = acc.manager;
 				$account = {
+					type: 'manager',
 					accountId,
 					id,
 					username,

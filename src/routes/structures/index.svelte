@@ -25,11 +25,11 @@
 	import { account } from '$lib/stores';
 	import LoaderIndicator from '$lib/ui/utils/LoaderIndicator.svelte';
 
-	import StructureList from './StructureList.svelte';
-	import AdminStructureAccountEdit from '$lib/ui/AdminStructureAccount/AdminStructureAccountEdit.svelte';
-	import type { Segment } from '$lib/routes';
+	import StructureList from '../../lib/ui/AdminStructureList/StructureList.svelte';
+	import { homeForRole, Segment } from '$lib/routes';
 	import Breadcrumbs from '$lib/ui/base/Breadcrumbs.svelte';
-	import type { ConnectedAdminStructure } from '$lib/stores/account';
+	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 
 	export let structureResult = operationStore(GetManagedStructuresDocument, {});
 
@@ -47,27 +47,24 @@
 	const breadcrumbs: Segment[] = [
 		{
 			name: 'accueil',
-			path: '/admin_structure',
+			path: homeForRole('admin_structure'),
 			label: 'Accueil',
 		},
 	];
-	function toConnectedAdminStructure(admin) {
-		return admin as ConnectedAdminStructure;
-	}
+
+	onMount(() => {
+		if (!$account.onboardingDone) {
+			goto('/admin_structure/bienvenue');
+		}
+	});
 </script>
 
 <svelte:head>
 	<title>Gestion des structures - Carnet de bord</title>
 </svelte:head>
 
-{#if !$account?.onboardingDone}
-	<div class="pt-12">
-		<AdminStructureAccountEdit adminStructure={toConnectedAdminStructure($account)} />
-	</div>
-{:else}
-	<Breadcrumbs segments={breadcrumbs} />
-	<LoaderIndicator result={structureResult}>
-		<h1>Mes structures</h1>
-		<StructureList {structures} />
-	</LoaderIndicator>
-{/if}
+<Breadcrumbs segments={breadcrumbs} />
+<LoaderIndicator result={structureResult}>
+	<h1>Mes structures</h1>
+	<StructureList {structures} />
+</LoaderIndicator>
