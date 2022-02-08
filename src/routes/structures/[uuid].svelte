@@ -1,6 +1,7 @@
 <script context="module" lang="ts">
 	import type { GetStructureQueryStore } from '$lib/graphql/_gen/typed-document-nodes';
 	import { GetStructureDocument } from '$lib/graphql/_gen/typed-document-nodes';
+	import { Card } from '$lib/ui/base';
 	import { LoaderIndicator } from '$lib/ui/utils';
 	import type { Load } from '@sveltejs/kit';
 	import { operationStore, query } from '@urql/svelte';
@@ -18,15 +19,24 @@
 </script>
 
 <script lang="ts">
+	import AdminStructureCard from '$lib/ui/AdminStructureCard.svelte';
+	import Text from '$lib/ui/utils/Text.svelte';
+
 	export let getStructure: GetStructureQueryStore;
 
 	query(getStructure);
 
 	$: structure = $getStructure.data?.structure_by_pk;
-	$: members = structure?.admins_aggregate?.nodes?.map(({ admin_structure: { id, email } }) => ({
-		id,
-		email,
-	}));
+	$: members = structure?.admins_aggregate?.nodes?.map(({ admin_structure }) => admin_structure);
+	$: metrics = [
+		{ label: 'Bénéficiaires', amount: 0 },
+		{ label: 'Professionnels', amount: structure?.professionals_aggregate?.aggregate?.count ?? 0 },
+		{
+			label: 'Bénéficiaires non rattachés',
+			amount: structure?.beneficiaries_aggregate?.aggregate?.count ?? 0,
+			classNames: 'text-marianne-red',
+		},
+	];
 </script>
 
 <svelte:head>
@@ -34,8 +44,85 @@
 </svelte:head>
 
 <LoaderIndicator result={getStructure}>
-	<div>{structure.name}</div>
-	{#each members as member (member.id)}
-		<div>Email : {member.email}</div>
-	{/each}
+	<div class="flex flex-col gap-6">
+		<h1 class="fr-h2">{structure.name}</h1>
+		<div class="flex flex-row gap-6">
+			<div>
+				<h2 class="fr-h4 !text-france-blue">Coordonnées</h2>
+
+				<div class="flex flex-col gap-1">
+					<Text
+						defaultValueClassNames="italic"
+						defaultValue="Pas de numéro de téléphone"
+						classNames="font-bold text-xl"
+						value={structure?.phone}
+					/>
+					<Text
+						defaultValueClassNames="italic"
+						defaultValue="Pas d'adresse email"
+						classNames="font-bold"
+						value={structure?.email}
+					/>
+					{#each [structure?.address1, structure?.address2].filter( (field) => Boolean(field) ) as line}
+						<Text value={line} />
+					{/each}
+					<Text
+						value={[structure?.postalCode, structure?.city]
+							.filter((field) => Boolean(field))
+							.join(' ')}
+					/>
+					<Text
+						defaultValueClassNames="italic"
+						defaultValue="Pas de site web"
+						value={structure?.website}
+					/>
+				</div>
+			</div>
+			<div class="grow">
+				<h2 class="fr-h4 !text-france-blue">Portefeuille de la structure</h2>
+				<div class="fr-grid-row fr-grid-row--gutters">
+					{#each metrics as item (item.label)}
+						<div class="fr-col-sm-6 fr-col-md-6 fr-col-lg-3">
+							<Card horizontal={true} hideArrow={true}>
+								<span slot="title">
+									<div
+										class={`pb-1 flex flex-row font-bold text-3xl tracking-wider ${
+											item.classNames || ''
+										}`}
+									>
+										{item.amount}
+									</div>
+								</span>
+								<span slot="description">
+									<span class={item.classNames || ''}>{item.label}</span>
+								</span>
+							</Card>
+						</div>
+					{/each}
+				</div>
+			</div>
+		</div>
+		<div>
+			<h2 class="fr-h4 !text-france-blue">Actions</h2>
+			<div class="fr-grid-row fr-grid-row--gutters">
+				<div class="fr-col-sm-6 fr-col-md-6 fr-col-lg-3">
+					<Card horizontal={true}>
+						<span slot="title">
+							<div class="pb-1 flex flex-row font-bold text-xl tracking-wider">Importer</div>
+						</span>
+					</Card>
+				</div>
+			</div>
+		</div>
+		<div>
+			<h2 class="fr-h4 !text-france-blue">Gestionnaire{members.length > 1 ? 's' : ''}</h2>
+			<div class="fr-grid-row fr-grid-row--gutters">
+				<div class="fr-col-sm-6 fr-col-md-6 fr-col-lg-3">
+					{#each members as member (member.id)}
+						<AdminStructureCard adminStructure={member} href="" />
+					{/each}
+				</div>
+			</div>
+		</div>
+	</div>
 </LoaderIndicator>

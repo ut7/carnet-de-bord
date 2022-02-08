@@ -8476,11 +8476,38 @@ export type GetStructureQuery = {
 				__typename?: 'structure';
 				id: string;
 				name?: string | null | undefined;
+				phone?: string | null | undefined;
+				email?: string | null | undefined;
+				address1?: string | null | undefined;
+				address2?: string | null | undefined;
+				postalCode?: string | null | undefined;
+				city?: string | null | undefined;
+				website?: string | null | undefined;
+				beneficiaries_aggregate: {
+					__typename?: 'beneficiary_structure_aggregate';
+					aggregate?:
+						| { __typename?: 'beneficiary_structure_aggregate_fields'; count: number }
+						| null
+						| undefined;
+				};
+				professionals_aggregate: {
+					__typename?: 'professional_aggregate';
+					aggregate?:
+						| { __typename?: 'professional_aggregate_fields'; count: number }
+						| null
+						| undefined;
+				};
 				admins_aggregate: {
 					__typename?: 'admin_structure_structure_aggregate';
 					nodes: Array<{
 						__typename?: 'admin_structure_structure';
-						admin_structure: { __typename?: 'admin_structure'; id: string; email: string };
+						admin_structure: {
+							__typename?: 'admin_structure';
+							id: string;
+							email: string;
+							firstname?: string | null | undefined;
+							lastname?: string | null | undefined;
+						};
 					}>;
 				};
 		  }
@@ -16482,6 +16509,47 @@ export const GetStructureDocument = {
 							selections: [
 								{ kind: 'Field', name: { kind: 'Name', value: 'id' } },
 								{ kind: 'Field', name: { kind: 'Name', value: 'name' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'phone' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'email' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'address1' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'address2' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'postalCode' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'city' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'website' } },
+								{
+									kind: 'Field',
+									name: { kind: 'Name', value: 'beneficiaries_aggregate' },
+									selectionSet: {
+										kind: 'SelectionSet',
+										selections: [
+											{
+												kind: 'Field',
+												name: { kind: 'Name', value: 'aggregate' },
+												selectionSet: {
+													kind: 'SelectionSet',
+													selections: [{ kind: 'Field', name: { kind: 'Name', value: 'count' } }],
+												},
+											},
+										],
+									},
+								},
+								{
+									kind: 'Field',
+									name: { kind: 'Name', value: 'professionals_aggregate' },
+									selectionSet: {
+										kind: 'SelectionSet',
+										selections: [
+											{
+												kind: 'Field',
+												name: { kind: 'Name', value: 'aggregate' },
+												selectionSet: {
+													kind: 'SelectionSet',
+													selections: [{ kind: 'Field', name: { kind: 'Name', value: 'count' } }],
+												},
+											},
+										],
+									},
+								},
 								{
 									kind: 'Field',
 									name: { kind: 'Name', value: 'admins_aggregate' },
@@ -16502,6 +16570,8 @@ export const GetStructureDocument = {
 																selections: [
 																	{ kind: 'Field', name: { kind: 'Name', value: 'id' } },
 																	{ kind: 'Field', name: { kind: 'Name', value: 'email' } },
+																	{ kind: 'Field', name: { kind: 'Name', value: 'firstname' } },
+																	{ kind: 'Field', name: { kind: 'Name', value: 'lastname' } },
 																],
 															},
 														},

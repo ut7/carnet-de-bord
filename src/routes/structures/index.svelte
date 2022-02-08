@@ -24,7 +24,6 @@
 <script lang="ts">
 	import { account } from '$lib/stores';
 	import LoaderIndicator from '$lib/ui/utils/LoaderIndicator.svelte';
-
 	import StructureList from '../../lib/ui/AdminStructureList/StructureList.svelte';
 	import { homeForRole, Segment } from '$lib/routes';
 	import Breadcrumbs from '$lib/ui/base/Breadcrumbs.svelte';
