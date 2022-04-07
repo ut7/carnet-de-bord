@@ -27,8 +27,8 @@ export function getSmtpConfig(): {
 	SMTP_FROM: string;
 	SMTP_HOST: string;
 	SMTP_PASS: string;
-	SMTP_PORT: number;
 	SMTP_USER: string;
+	SMTP_PORT: number;
 } {
 	const { SMTP_FROM, SMTP_HOST, SMTP_PASS, SMTP_PORT, SMTP_USER } = process.env;
 	return {
