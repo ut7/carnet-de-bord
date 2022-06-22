@@ -60,7 +60,7 @@ export const post: RequestHandler = async ({ request }) => {
 	try {
 		await createBeneficiaryIfNotExist(username);
 	} catch (error) {
-		console.error(`account creation for beneficiary ${username} failed`);
+		console.error(`account creation for beneficiary ${username} failed`, { error });
 		return {
 			status: 500,
 			body: {
