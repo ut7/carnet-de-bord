@@ -15,8 +15,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Install Scalingo CLI
+        run:
+          wget https://cli-dl.scalingo.com/install
+          mkdir -p $HOME/bin
+          bash ./install -i $HOME/bin
       - name: Run linking script
         env:
           SUFFIX: -review-pr{{github.event.number}}
         run:
+          PATH=$HOME/bin:$PATH
           ./scripts/link-scalingo-apps.sh
