@@ -2,10 +2,6 @@
 
 set -euo pipefail
 
-scalingo apps
-
-: ${SUFFIX?}
-
 TIMEOUT=30
 
 function log() {
@@ -108,6 +104,8 @@ function start_apps() {
   scalingo -a $(get_app_name backend) scale web:1:S
   scalingo -a $(get_app_name app) scale web:1:S
 }
+
+log "Links apps with suffix: ${SUFFIX?}"
 
 wait_for_apps_ready
 
