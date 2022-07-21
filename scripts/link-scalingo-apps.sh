@@ -26,7 +26,7 @@ function wait_for_service_ready() {
   local status
 
   while [[ $waited -lt $TIMEOUT ]]; do
-    status=$(scalingo -a $appname apps-info|awk '/Status/{print $4}')
+    status=$(scalingo -a $appname apps-info 2>/dev/null|awk '/Status/{print $4}' || true)
     log "  - $appname is now: $status"
     if [[ "$status" == stopped || "$status" == running ]]; then
       return
