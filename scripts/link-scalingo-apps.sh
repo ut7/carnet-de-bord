@@ -111,6 +111,8 @@ wait_for_apps_ready
 
 stop_apps
 
+wait_for_apps_ready
+
 compute_urls
 
 set_backend_env
