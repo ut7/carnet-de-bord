@@ -15,8 +15,9 @@ function get_app_name() {
   echo cdb-$service$SUFFIX
 }
 
-function wait_for_service_ready() {
+function wait_for_service_status() {
   local service=$1
+  local status_re=$2
 
   local appname=$(get_app_name $service)
 
@@ -28,21 +29,23 @@ function wait_for_service_ready() {
   while [[ $waited -lt $TIMEOUT ]]; do
     status=$(scalingo -a $appname apps-info 2>/dev/null|awk '/Status/{print $4}' || true)
     log "  - $appname is now: $status"
-    if [[ "$status" == stopped || "$status" == running ]]; then
+    if [[ "$status" =~ $status_re ]]; then
       return
     fi
     sleep 5
     waited=$((waited + 5))
   done
 
-  log "ERROR: $appname was not stopped or running after $TIMEOUT seconds"
+  log "ERROR: $appname was not $status_re after $TIMEOUT seconds"
   exit 1
 }
 
-function wait_for_apps_ready() {
-  wait_for_service_ready app
-  wait_for_service_ready backend
-  wait_for_service_ready hasura
+function wait_for_apps_status() {
+  local status_re=$1
+
+  wait_for_service_status app "$status_re"
+  wait_for_service_status backend "$status_re"
+  wait_for_service_status hasura "$status_re"
 }
 
 function get_database_url() {
@@ -107,11 +110,11 @@ function start_apps() {
 
 log "Links apps with suffix: ${SUFFIX?}"
 
-wait_for_apps_ready
+wait_for_apps_status 'stopped|running'
 
 stop_apps
 
-wait_for_apps_ready
+wait_for_apps_status 'stopped'
 
 compute_urls
 
@@ -120,3 +123,5 @@ set_hasura_env
 set_app_env
 
 start_apps
+
+wait_for_apps_status 'running'
