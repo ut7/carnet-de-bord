@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-TIMEOUT=60
+TIMEOUT=600
 
 function log() {
   local msg=$1
