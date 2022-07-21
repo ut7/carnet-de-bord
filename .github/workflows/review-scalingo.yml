@@ -16,7 +16,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Install Scalingo CLI
-        run:
+        run: |
           wget https://cli-dl.scalingo.com/install
           mkdir -p $HOME/bin
           bash ./install -i $HOME/bin
