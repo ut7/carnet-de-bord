@@ -22,7 +22,8 @@ jobs:
           bash ./install -i $HOME/bin
       - name: Run linking script
         env:
+          SCALINGO_API_TOKEN: ${{ secrets.SCALINGO_API_TOKEN }}
           SUFFIX: -review-pr{{github.event.number}}
-        run:
+        run: |
           PATH=$HOME/bin:$PATH
           ./scripts/link-scalingo-apps.sh
