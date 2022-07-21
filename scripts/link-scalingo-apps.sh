@@ -21,7 +21,7 @@ function wait_for_service_status() {
 
   local appname=$(get_app_name $service)
 
-  log "* Waiting for $appname to be ready..."
+  log "* Waiting for $appname to be $re_status..."
 
   local waited=0
   local status
