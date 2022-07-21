@@ -1,0 +1,22 @@
+name: Scalingo review app creation
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+concurrency:
+  cancel-in-progress: true
+  group: review-scalingo-${{ github.ref }}
+
+jobs:
+  scalingo-link:
+    name: Link Scalingo review apps
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Run linking script
+        env:
+          SUFFIX: -review-pr{{github.event.number}}
+        run:
+          ./scripts/link-scalingo-apps.sh
