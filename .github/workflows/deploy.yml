@@ -32,7 +32,7 @@ jobs:
           SCALINGO_APP: cdb-${{ matrix.service }}${{ secrets.APP_SUFFIX }}
           SCALINGO_API_TOKEN: ${{ secrets.SCALINGO_API_TOKEN }}
         run:
-          scalingo deploy ${{ github.server_url }}/${{ github.repository }}/tarball/${{ github.ref_name }} ${{ github.ref_name }}
+          echo scalingo deploy ${{ github.server_url }}/${{ github.repository }}/tarball/${{ github.ref_name }} ${{ github.ref_name }}
 
   notify:
     name: Notify
@@ -42,6 +42,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
       - name: Find matching workflow
         uses: SamhammerAG/last-successful-build-action@a54c030db88e60c06a9e50c25418748afc623c20
         id: latest-deployment
@@ -49,24 +50,10 @@ jobs:
           token: "${{ secrets.GITHUB_TOKEN }}"
           workflow: "Deploy"
           verify: true
-      - name: Extract changelog content
+
+      - name: Post message with changelog contents
         id: extract-changelog
         run: |
-          CHANGELOG_CONTENT=$(cat << EOF
-          $(git diff --output-indicator-new='*' ${{ steps.latest-deployment.outputs.sha }}...${{ github.sha }} CHANGELOG.md | egrep '^\*' | cut -c 2-)
-          EOF
-          )
-          # replace new lines and carriage returns
-          CHANGELOG_CONTENT="${CHANGELOG_CONTENT//'%'/'%25'}"
-          CHANGELOG_CONTENT="${CHANGELOG_CONTENT//$'\n'/'%0A'}"
-          CHANGELOG_CONTENT="${CHANGELOG_CONTENT//$'\r'/'%0D'}"
-          echo "content=$CHANGELOG_CONTENT" >> $GITHUB_OUTPUT
-      - name: Create the deployment message
-        run: |
-          echo "{\"text\":\":tada: **${{ github.ref_name }} en production**\n${{ steps.extract-changelog.outputs.content }}\"}"
-            # > mattermost.json
-            #       - name: Notify deployment on Mattermost
-            #         uses: mattermost/action-mattermost-notify@master
-            #         env:
-            #           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
-            #           MATTERMOST_CHANNEL: startup-carnetdebord-deploiements
+          CHANGELOG_CONTENT=$(git diff --output-indicator-new='*' ${{ steps.latest-deployment.outputs.sha }}...${{ github.sha }} CHANGELOG.md | egrep '^\*' | cut -c 2-)
+          MESSAGE_JSON=$(node -p 'JSON.stringify({text:`:tada: **${{ github.ref_name }} en production**\\\n${process.argv[1]}`})' "$CHANGELOG_CONTENT")
+          curl -Ss ${{ secrets.MATTERMOST_WEBHOOK_URL }} --data-binary "$MESSAGE_JSON"
