@@ -1,3 +1,38 @@
+## [1.156.3](https://github.com/gip-inclusion/carnet-de-bord/compare/v1.156.2...v1.156.3) (2022-11-10)
+
+
+### Bug Fixes
+
+* attach stack trace to all loggin errors ([#1229](https://github.com/gip-inclusion/carnet-de-bord/issues/1229)) ([0671ada](https://github.com/gip-inclusion/carnet-de-bord/commit/0671ada7034be224130111db97b85948bf2ebd54))
+
+## [1.156.2](https://github.com/gip-inclusion/carnet-de-bord/compare/v1.156.1...v1.156.2) (2022-11-09)
+
+
+### Bug Fixes
+
+* Réparation de l'envoi quotidien des données vers MATOMO. ([#1226](https://github.com/gip-inclusion/carnet-de-bord/issues/1226)) ([7141a9e](https://github.com/gip-inclusion/carnet-de-bord/commit/7141a9e4113b9e0fdb0aa2f30a2ac5f131c8a000))
+
+## [1.156.1](https://github.com/gip-inclusion/carnet-de-bord/compare/v1.156.0...v1.156.1) (2022-11-09)
+
+
+### Bug Fixes
+
+* redirection après connexion ([#1225](https://github.com/gip-inclusion/carnet-de-bord/issues/1225)) ([e3a77e5](https://github.com/gip-inclusion/carnet-de-bord/commit/e3a77e53f78c12f5e1334650ecbff09be530f202))
+
+# [1.156.0](https://github.com/gip-inclusion/carnet-de-bord/compare/v1.155.0...v1.156.0) (2022-11-02)
+
+
+### Features
+
+* Préciser l'action attendue dans le mail de notification de demande de création de compte ([#1217](https://github.com/gip-inclusion/carnet-de-bord/issues/1217)) ([713ab7c](https://github.com/gip-inclusion/carnet-de-bord/commit/713ab7ca7e05899ce3d1f39f5173ccc8318ad174))
+
+# [1.155.0](https://github.com/gip-inclusion/carnet-de-bord/compare/v1.154.4...v1.155.0) (2022-11-02)
+
+
+### Features
+
+* add nir to validation report during beneficiary import ([#1218](https://github.com/gip-inclusion/carnet-de-bord/issues/1218)) ([aec9171](https://github.com/gip-inclusion/carnet-de-bord/commit/aec91714444cf8e624f311617b3afa4f6af36665))
+
 ## [1.154.4](https://github.com/gip-inclusion/carnet-de-bord/compare/v1.154.3...v1.154.4) (2022-11-01)
 
 
