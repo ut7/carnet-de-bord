@@ -16,37 +16,37 @@ concurrency:
   group: test-${{ github.ref }}
 
 jobs:
-  ##############################################################################
-  ## Python backend tests
-  ##############################################################################
-  pytest:
-    name: Run pytest tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Install Hasura CLI
-        uses: ./.github/actions/hasura-cli
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{env.PYTHON_VERSION}}
-
-      - name: Setup Poetry
-        uses: abatilo/actions-poetry@v2.1.6
-        with:
-          poetry-version: ${{env.POETRY_VERSION}}
-
-      - name: Install dependencies
-        working-directory: ./backend
-        run: poetry install
-
-      - name: Run pytest
-        run: |
-          cp .env.test.sample .env.test
-          ./scripts/launch_tests.sh python
+  #   ##############################################################################
+  #   ## Python backend tests
+  #   ##############################################################################
+  #   pytest:
+  #     name: Run pytest tests
+  #     runs-on: ubuntu-latest
+  #     steps:
+  #       - name: Checkout repository
+  #         uses: actions/checkout@v3
+  # 
+  #       - name: Install Hasura CLI
+  #         uses: ./.github/actions/hasura-cli
+  # 
+  #       - name: Setup Python
+  #         uses: actions/setup-python@v4
+  #         with:
+  #           python-version: ${{env.PYTHON_VERSION}}
+  # 
+  #       - name: Setup Poetry
+  #         uses: abatilo/actions-poetry@v2.1.6
+  #         with:
+  #           poetry-version: ${{env.POETRY_VERSION}}
+  # 
+  #       - name: Install dependencies
+  #         working-directory: ./backend
+  #         run: poetry install
+  # 
+  #       - name: Run pytest
+  #         run: |
+  #           cp .env.test.sample .env.test
+  #           ./scripts/launch_tests.sh python
 
   ##############################################################################
   ## End To End Tests
@@ -90,7 +90,7 @@ jobs:
       - name: Run test e2e
         run: |
           cp .env.test.sample .env.test
-          ./scripts/launch_tests.sh e2e
+          ./scripts/launch_tests.sh e2e --grep 'Import de bénéficiaires$'
 
       - name: Copy artifact
         if: failure()
@@ -99,32 +99,32 @@ jobs:
           name: screenshot
           path: e2e/output
 
-  ##############################################################################
-  ## Functional Tests (endpoints & hasura)
-  ##############################################################################
-  functional_tests:
-    name: Run functional tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup NodeJS
-        uses: actions/setup-node@v3
-        with:
-          node-version-file: ".nvmrc"
-          cache: npm
-          cache-dependency-path: "**/package-lock.json"
-
-      - name: Install dependencies
-        run: |
-          npm ci --prefix app
-          npm run sync --prefix app
-
-      - name: Install Hasura CLI
-        uses: ./.github/actions/hasura-cli
-
-      - name: Run functional tests
-        run: |
-          cp .env.test.sample .env.test
-          ./scripts/launch_tests.sh js
+            #   ##############################################################################
+            #   ## Functional Tests (endpoints & hasura)
+            #   ##############################################################################
+            #   functional_tests:
+            #     name: Run functional tests
+            #     runs-on: ubuntu-latest
+            #     steps:
+            #       - name: Checkout repository
+            #         uses: actions/checkout@v3
+            # 
+            #       - name: Setup NodeJS
+            #         uses: actions/setup-node@v3
+            #         with:
+            #           node-version-file: ".nvmrc"
+            #           cache: npm
+            #           cache-dependency-path: "**/package-lock.json"
+            # 
+            #       - name: Install dependencies
+            #         run: |
+            #           npm ci --prefix app
+            #           npm run sync --prefix app
+            # 
+            #       - name: Install Hasura CLI
+            #         uses: ./.github/actions/hasura-cli
+            # 
+            #       - name: Run functional tests
+            #         run: |
+            #           cp .env.test.sample .env.test
+            #           ./scripts/launch_tests.sh js
