@@ -90,7 +90,7 @@ jobs:
       - name: Run test e2e
         run: |
           cp .env.test.sample .env.test
-          ./scripts/launch_tests.sh e2e
+          ./scripts/launch_tests.sh e2e --grep 'Import'
 
       - name: Copy artifact
         if: failure()
