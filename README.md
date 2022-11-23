@@ -59,3 +59,4 @@ Ce logiciel et son code source sont distribués sous licence Apache-2.0.
 
 Le texte entier de la licence peut être consulté depuis le fichier [LICENSE](./LICENSE).
 test
+test
